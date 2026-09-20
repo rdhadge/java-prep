@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -72,13 +73,98 @@ public class StringManipulation {
 
     // find first non-repeating character
     private static void printFirstNonRepeatingCharacter() {
-        String inputString = input.toLowerCase();
-        for (char c : inputString.toCharArray()) {
-            if (inputString.indexOf(c) == inputString.lastIndexOf(c)) {
-                System.out.println("First non-repeating character - " + c);
-                break;
+        String str = """
+            Multi-tenancy is an architecture where a single software instance and 
+            its underlying infrastructure serve multiple distinct customer organizations called tenants.
+            
+            In a multi-tenant SaaS environment, every tenant shares the same application, compute resources, 
+            and often the same database engine, yet each tenant's data, configurations, and user permissions 
+            remain completely segregated and private. """;
+
+        System.out.println("getFirstNonRepeatingCharacterUsingIndexOf");
+        long startTime = System.nanoTime();
+        char firstNonRepeatingChar = getFirstNonRepeatingCharacterUsingIndexOf(str);
+        // End timer
+        long endTime = System.nanoTime();
+        long duration = endTime - startTime; // Duration in nanoseconds
+        System.out.println(String.format("First non repeating character: %c, time taken: %d", firstNonRepeatingChar, duration));
+
+        System.out.println("getFirstNonRepeatingCharacterWithoutCharArray");
+        startTime = System.nanoTime();
+        firstNonRepeatingChar = getFirstNonRepeatingCharacterWithoutCharArray(str);
+        endTime = System.nanoTime();
+        duration = endTime - startTime; // Duration in nanoseconds
+        System.out.println(String.format("First non repeating character: %c, time taken: %d", firstNonRepeatingChar, duration));
+
+        System.out.println("getFirstNonRepeatingCharacterUsingMap");
+        startTime = System.nanoTime();
+        firstNonRepeatingChar = getFirstNonRepeatingCharacterUsingMap(str);
+        endTime = System.nanoTime();
+        duration = endTime - startTime; // Duration in nanoseconds
+        System.out.println(String.format("First non repeating character: %c, time taken: %d", firstNonRepeatingChar, duration));
+
+        System.out.println("getFirstNonRepeatingCharacterWithArrayCounter");
+        startTime = System.nanoTime();
+        firstNonRepeatingChar = getFirstNonRepeatingCharacterWithArrayCounter(str);
+        endTime = System.nanoTime();
+        duration = endTime - startTime; // Duration in nanoseconds
+        System.out.println(String.format("First non repeating character: %c, time taken: %d", firstNonRepeatingChar, duration));
+    }
+
+    public static char getFirstNonRepeatingCharacterUsingIndexOf(String str) {
+        for (char c: str.toCharArray()) {
+            if (str.indexOf(c) == str.lastIndexOf(c)) {
+                return c;
             }
         }
+        return '\0';
+    }
+
+    public static char getFirstNonRepeatingCharacterWithoutCharArray(String str) {
+        for (int i=0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (str.indexOf(c) == str.lastIndexOf(c)) {
+                return c;
+            }
+        }
+        return '\0';
+    }
+
+    public static char getFirstNonRepeatingCharacterUsingMap(String str) {
+        Map<Character, Integer> charMap = new LinkedHashMap<Character, Integer>(str.length());
+        
+        for (int i=0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (charMap.containsKey(c)) {
+                charMap.put(c, charMap.get(c) + 1);
+            } else {
+                charMap.put(c, 1);
+            }
+        }
+
+        for (Map.Entry<Character, Integer> entry: charMap.entrySet()) {
+            if (entry.getValue() == 1) {
+                return entry.getKey();
+            }
+        }
+
+        return '\0';
+    }
+
+    public static char getFirstNonRepeatingCharacterWithArrayCounter(String str) {
+        int[] count = new int[str.length()]; 
+
+        for (int i = 0; i < str.length(); i++) {
+            count[str.charAt(i)]++;
+        }
+
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (count[c] == 1) {
+                return c;
+            }
+        }
+        return '\0';
     }
 
     // remove duplicate words from string
