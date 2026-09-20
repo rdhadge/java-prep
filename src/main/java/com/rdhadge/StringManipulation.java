@@ -19,19 +19,44 @@ public class StringManipulation {
 
     // input string
     public static String input = "Use this editor to write, compile and run your Java code online";
-    
+    public static final String PRINT_DIVISION = "-----------------------------------------------------------------------------";
+
+    public static void printDivision() {
+        System.out.println(PRINT_DIVISION);
+    }
+
     // public constructor
     public StringManipulation() {
         System.out.println("Input string - " + input);
         printReversedStringCharacters();
+        printDivision();
+
         printReversedStringWords();
+        printDivision();
+
         printReversedStringWordsUsingStream();
+        printDivision();
+
+        printReversedStringWithoutUsingBuiltInMethods();
+        printDivision();
+
         printFirstRepeatingCharacter();
+        printDivision();
+
         printFirstNonRepeatingCharacter();
+        printDivision();
+
         printStringRemovingDuplicates();
+        printDivision();
+
         printStringRemovingDuplicateChars();
+        printDivision();
+
         countFrequencyOfWordsUsingStreams();
+        printDivision();
+
         countFrequencyOfWords();
+        printDivision();
     }
 
     // complete string reversed - all characters reversed
@@ -58,6 +83,67 @@ public class StringManipulation {
         Collections.reverse(sentenceList);
         sentenceList.forEach(str -> System.out.print(str + " "));
         System.out.println();
+    }
+
+    // reverse a string without using in built methods
+    private static void printReversedStringWithoutUsingBuiltInMethods() {
+        String strArray[] = {
+            "Start small. Ship something.",
+            """
+            Multi-tenancy is an architecture where a single software instance and 
+            its underlying infrastructure serve multiple distinct customer organizations called tenants.
+            
+            In a multi-tenant SaaS environment, every tenant shares the same application, compute resources, 
+            and often the same database engine, yet each tenant's data, configurations, and user permissions 
+            remain completely segregated and private. """,
+            "Universal Fallback: Escape Characters"
+        };
+
+        for (String str: strArray) {
+        
+            System.out.println("==============================");
+
+            System.out.println("Original String: " + str);
+            long startTime = System.nanoTime();        
+            // getReversedStringUsingStringBuilder(str);
+            System.out.println("Reversed String: " + getReversedStringUsingStringBuilder(str));
+            long endTime = System.nanoTime();
+            long durationNs = endTime - startTime;
+            System.out.println("Execution time: " + durationNs + " ns");
+            
+            System.out.println("  ===============");
+            startTime = System.nanoTime();  
+            // getReversedStringUsingCharcterSwap(str);
+            System.out.println("Reversed String: " + getReversedStringUsingCharcterSwap(str));
+            endTime = System.nanoTime();
+            durationNs = endTime - startTime;
+            System.out.println("Execution time: " + durationNs + " ns");
+
+            System.out.println();
+        }
+    }
+
+    public static String getReversedStringUsingStringBuilder(String str) {
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i=str.length()-1;i >= 0; i--) {
+            strBuilder.append(str.charAt(i));
+        }
+        return strBuilder.toString();
+    }
+
+    public static String getReversedStringUsingCharcterSwap(String str) {
+        char[] charArr = str.toCharArray();
+        int left = 0;
+        int right = charArr.length-1;
+
+        while(left < right) {
+            char temp = charArr[left];
+            charArr[left] = charArr[right];
+            charArr[right] = temp;
+            left++;
+            right--;
+        }
+        return new String(charArr);
     }
 
     // find first repeating character
